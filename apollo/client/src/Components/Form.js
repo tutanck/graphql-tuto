@@ -1,10 +1,29 @@
 import React, { useState } from "react";
- 
+import { CREATE_USER_MUTATION } from "../GraphQL/Mutations";
+import { useMutation } from "@apollo/client";
+
 function Form() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [createUser, { error }] = useMutation(CREATE_USER_MUTATION);
+
+  const addUser = () => {
+    createUser({
+      variables: {
+        firstName,
+        lastName,
+        email,
+        password,
+      },
+    });
+
+    if (error) {
+      console.log({ error });
+    }
+  };
 
   return (
     <div>
@@ -36,7 +55,7 @@ function Form() {
           setPassword(e.target.value);
         }}
       />
-      <button>Create User</button>
+      <button onClick={addUser}>Create User</button>
     </div>
   );
 }
